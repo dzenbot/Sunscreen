@@ -17,8 +17,15 @@
 		4F64B7C8197214A700F3142C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F64B7A7197214A700F3142C /* Cocoa.framework */; };
 		4F64B7D0197214A700F3142C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4F64B7CE197214A700F3142C /* InfoPlist.strings */; };
 		4F64B7D2197214A700F3142C /* SunScreenTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F64B7D1197214A700F3142C /* SunScreenTests.m */; };
-		4F64B7E11972151800F3142C /* SUNAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F64B7DE1972151800F3142C /* SUNAppDelegate.m */; };
-		4F64B7E21972151800F3142C /* SUNScreenManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F64B7E01972151800F3142C /* SUNScreenManager.m */; };
+		4F64B7ED1972286F00F3142C /* SUNScreenManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F64B7E81972286F00F3142C /* SUNScreenManager.m */; };
+		4F64B7EE1972286F00F3142C /* SUNAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F64B7EA1972286F00F3142C /* SUNAppDelegate.m */; };
+		4F64B7F11972288800F3142C /* SUNSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F64B7F01972288800F3142C /* SUNSlider.m */; };
+		4F64B7FA19722D6F00F3142C /* SUNScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F64B7F919722D6F00F3142C /* SUNScreen.m */; };
+		4F64B7FC1972336300F3142C /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F64B7FB1972336300F3142C /* IOKit.framework */; };
+		4F64B7FE1972336E00F3142C /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F64B7FD1972336E00F3142C /* SystemConfiguration.framework */; };
+		4F64B8061972345D00F3142C /* SUNViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F64B8041972345D00F3142C /* SUNViewController.m */; };
+		4F64B8071972345D00F3142C /* SUNViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4F64B8051972345D00F3142C /* SUNViewController.xib */; };
+		906E480889674650829B57B1 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E6D71831F4402D88C5EDA4 /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,6 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4BB2612664624D5AB8761799 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		4F64B7A4197214A700F3142C /* Sunscreen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sunscreen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F64B7A7197214A700F3142C /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		4F64B7AA197214A700F3142C /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -49,11 +57,21 @@
 		4F64B7CD197214A700F3142C /* Sunscreen.temp_caseinsensitive_renameTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Sunscreen.temp_caseinsensitive_renameTests-Info.plist"; sourceTree = "<group>"; };
 		4F64B7CF197214A700F3142C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4F64B7D1197214A700F3142C /* SunScreenTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SunScreenTests.m; sourceTree = "<group>"; };
-		4F64B7DC1972151800F3142C /* CGDirectDisplayUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGDirectDisplayUtility.h; sourceTree = "<group>"; };
-		4F64B7DD1972151800F3142C /* SUNAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SUNAppDelegate.h; path = Class/SUNAppDelegate.h; sourceTree = "<group>"; };
-		4F64B7DE1972151800F3142C /* SUNAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SUNAppDelegate.m; path = Class/SUNAppDelegate.m; sourceTree = "<group>"; };
-		4F64B7DF1972151800F3142C /* SUNScreenManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUNScreenManager.h; sourceTree = "<group>"; };
-		4F64B7E01972151800F3142C /* SUNScreenManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUNScreenManager.m; sourceTree = "<group>"; };
+		4F64B7E71972286F00F3142C /* SUNScreenManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUNScreenManager.h; sourceTree = "<group>"; };
+		4F64B7E81972286F00F3142C /* SUNScreenManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUNScreenManager.m; sourceTree = "<group>"; };
+		4F64B7E91972286F00F3142C /* SUNAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUNAppDelegate.h; sourceTree = "<group>"; };
+		4F64B7EA1972286F00F3142C /* SUNAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUNAppDelegate.m; sourceTree = "<group>"; };
+		4F64B7EC1972286F00F3142C /* CGDirectDisplayUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGDirectDisplayUtility.h; sourceTree = "<group>"; };
+		4F64B7EF1972288800F3142C /* SUNSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUNSlider.h; sourceTree = "<group>"; };
+		4F64B7F01972288800F3142C /* SUNSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUNSlider.m; sourceTree = "<group>"; };
+		4F64B7F819722D6F00F3142C /* SUNScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUNScreen.h; sourceTree = "<group>"; };
+		4F64B7F919722D6F00F3142C /* SUNScreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUNScreen.m; sourceTree = "<group>"; };
+		4F64B7FB1972336300F3142C /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		4F64B7FD1972336E00F3142C /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		4F64B8031972345D00F3142C /* SUNViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SUNViewController.h; path = ViewControllers/SUNViewController.h; sourceTree = "<group>"; };
+		4F64B8041972345D00F3142C /* SUNViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SUNViewController.m; path = ViewControllers/SUNViewController.m; sourceTree = "<group>"; };
+		4F64B8051972345D00F3142C /* SUNViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SUNViewController.xib; path = ViewControllers/SUNViewController.xib; sourceTree = "<group>"; };
+		C1E6D71831F4402D88C5EDA4 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,7 +79,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F64B7FE1972336E00F3142C /* SystemConfiguration.framework in Frameworks */,
+				4F64B7FC1972336300F3142C /* IOKit.framework in Frameworks */,
 				4F64B7A8197214A700F3142C /* Cocoa.framework in Frameworks */,
+				906E480889674650829B57B1 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,9 +102,10 @@
 			isa = PBXGroup;
 			children = (
 				4F64B7AD197214A700F3142C /* Sunscreen */,
-				4F64B7CB197214A700F3142C /* SunScreenTests */,
+				4F64B7CB197214A700F3142C /* SunscreenTests */,
 				4F64B7A6197214A700F3142C /* Frameworks */,
 				4F64B7A5197214A700F3142C /* Products */,
+				4BB2612664624D5AB8761799 /* Pods.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -99,9 +121,12 @@
 		4F64B7A6197214A700F3142C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4F64B7FD1972336E00F3142C /* SystemConfiguration.framework */,
+				4F64B7FB1972336300F3142C /* IOKit.framework */,
 				4F64B7A7197214A700F3142C /* Cocoa.framework */,
 				4F64B7C6197214A700F3142C /* XCTest.framework */,
 				4F64B7A9197214A700F3142C /* Other Frameworks */,
+				C1E6D71831F4402D88C5EDA4 /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -119,9 +144,7 @@
 		4F64B7AD197214A700F3142C /* Sunscreen */ = {
 			isa = PBXGroup;
 			children = (
-				4F64B7DD1972151800F3142C /* SUNAppDelegate.h */,
-				4F64B7DE1972151800F3142C /* SUNAppDelegate.m */,
-				4F64B7DB1972151800F3142C /* Class */,
+				4F64B7E41972286F00F3142C /* Class */,
 				4F64B7E31972156B00F3142C /* Resources */,
 				4F64B7AE197214A700F3142C /* Supporting Files */,
 			);
@@ -140,12 +163,13 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		4F64B7CB197214A700F3142C /* SunScreenTests */ = {
+		4F64B7CB197214A700F3142C /* SunscreenTests */ = {
 			isa = PBXGroup;
 			children = (
 				4F64B7D1197214A700F3142C /* SunScreenTests.m */,
 				4F64B7CC197214A700F3142C /* Supporting Files */,
 			);
+			name = SunscreenTests;
 			path = SunScreenTests;
 			sourceTree = "<group>";
 		};
@@ -158,16 +182,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		4F64B7DB1972151800F3142C /* Class */ = {
-			isa = PBXGroup;
-			children = (
-				4F64B7DF1972151800F3142C /* SUNScreenManager.h */,
-				4F64B7E01972151800F3142C /* SUNScreenManager.m */,
-				4F64B7DC1972151800F3142C /* CGDirectDisplayUtility.h */,
-			);
-			path = Class;
-			sourceTree = "<group>";
-		};
 		4F64B7E31972156B00F3142C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -178,6 +192,58 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		4F64B7E41972286F00F3142C /* Class */ = {
+			isa = PBXGroup;
+			children = (
+				4F64B7E91972286F00F3142C /* SUNAppDelegate.h */,
+				4F64B7EA1972286F00F3142C /* SUNAppDelegate.m */,
+				4F64B8021972342400F3142C /* ViewControllers */,
+				4F64B7E51972286F00F3142C /* Controls */,
+				4F64B7E61972286F00F3142C /* Managers */,
+				4F64B7EB1972286F00F3142C /* Utilities */,
+			);
+			name = Class;
+			path = Sunscreen/Class;
+			sourceTree = SOURCE_ROOT;
+		};
+		4F64B7E51972286F00F3142C /* Controls */ = {
+			isa = PBXGroup;
+			children = (
+				4F64B7EF1972288800F3142C /* SUNSlider.h */,
+				4F64B7F01972288800F3142C /* SUNSlider.m */,
+			);
+			path = Controls;
+			sourceTree = "<group>";
+		};
+		4F64B7E61972286F00F3142C /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				4F64B7E71972286F00F3142C /* SUNScreenManager.h */,
+				4F64B7E81972286F00F3142C /* SUNScreenManager.m */,
+				4F64B7F819722D6F00F3142C /* SUNScreen.h */,
+				4F64B7F919722D6F00F3142C /* SUNScreen.m */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		4F64B7EB1972286F00F3142C /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				4F64B7EC1972286F00F3142C /* CGDirectDisplayUtility.h */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		4F64B8021972342400F3142C /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				4F64B8031972345D00F3142C /* SUNViewController.h */,
+				4F64B8041972345D00F3142C /* SUNViewController.m */,
+				4F64B8051972345D00F3142C /* SUNViewController.xib */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -185,9 +251,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4F64B7D5197214A700F3142C /* Build configuration list for PBXNativeTarget "Sunscreen" */;
 			buildPhases = (
+				5067011D7197475DB8C4E478 /* Check Pods Manifest.lock */,
 				4F64B7A0197214A700F3142C /* Sources */,
 				4F64B7A1197214A700F3142C /* Frameworks */,
 				4F64B7A2197214A700F3142C /* Resources */,
+				8B14B0597E3546F6AF36BF61 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -259,6 +327,7 @@
 				4F64B7C0197214A700F3142C /* Images.xcassets in Resources */,
 				4F64B7B8197214A700F3142C /* Credits.rtf in Resources */,
 				4F64B7BE197214A700F3142C /* MainMenu.xib in Resources */,
+				4F64B8071972345D00F3142C /* SUNViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,14 +341,50 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		5067011D7197475DB8C4E478 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		8B14B0597E3546F6AF36BF61 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		4F64B7A0197214A700F3142C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4F64B7E11972151800F3142C /* SUNAppDelegate.m in Sources */,
+				4F64B7EE1972286F00F3142C /* SUNAppDelegate.m in Sources */,
+				4F64B7FA19722D6F00F3142C /* SUNScreen.m in Sources */,
+				4F64B8061972345D00F3142C /* SUNViewController.m in Sources */,
+				4F64B7ED1972286F00F3142C /* SUNScreenManager.m in Sources */,
 				4F64B7B4197214A700F3142C /* main.m in Sources */,
-				4F64B7E21972151800F3142C /* SUNScreenManager.m in Sources */,
+				4F64B7F11972288800F3142C /* SUNSlider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -369,7 +474,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 			};
@@ -402,13 +507,14 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				SDKROOT = macosx;
 			};
 			name = Release;
 		};
 		4F64B7D6197214A700F3142C /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4BB2612664624D5AB8761799 /* Pods.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -422,6 +528,7 @@
 		};
 		4F64B7D7197214A700F3142C /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4BB2612664624D5AB8761799 /* Pods.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -492,6 +599,7 @@
 				4F64B7D7197214A700F3142C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4F64B7D8197214A700F3142C /* Build configuration list for PBXNativeTarget "SunscreenTests" */ = {
 			isa = XCConfigurationList;
@@ -500,6 +608,7 @@
 				4F64B7DA197214A700F3142C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

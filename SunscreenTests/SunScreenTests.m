@@ -9,7 +9,6 @@
 #import <XCTest/XCTest.h>
 
 @interface SunscreenTests : XCTestCase
-
 @end
 
 @implementation SunscreenTests

@@ -1,5 +1,5 @@
 //
-//  SUNAppDelegate.h
+//  SUNSlider.h
 //  Sunscreen
 //
 //  Created by Ignacio Romero Z. on 7/12/14.
@@ -8,8 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface SUNAppDelegate : NSObject <NSApplicationDelegate, NSMenuDelegate>
+@interface SUNSlider : NSSlider
 
-- (IBAction)quit:(id)sender;
+@property (nonatomic, assign) BOOL enabled;
 
 @end

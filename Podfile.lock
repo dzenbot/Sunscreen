@@ -1,0 +1,16 @@
+PODS:
+  - DZNCategories (1.1.1):
+    - DZNCategories/Foundation
+  - DZNCategories/Foundation (1.1.1)
+
+DEPENDENCIES:
+  - DZNCategories (from `/Users/ignacio/Desktop/DZN/OSS/DZNCategories/`)
+
+EXTERNAL SOURCES:
+  DZNCategories:
+    :path: /Users/ignacio/Desktop/DZN/OSS/DZNCategories/
+
+SPEC CHECKSUMS:
+  DZNCategories: 34deda0be5ba606308851a2bf2878cad0587bfb6
+
+COCOAPODS: 0.33.1

@@ -7,9 +7,15 @@
 //
 
 #import "SUNAppDelegate.h"
-#import "SunscreenManager.h"
+#import "SUNViewController.h"
+
+#import "SUNScreenManager.h"
+
+#import "NSObject+System.h"
 
 @interface SUNAppDelegate ()
+@property (nonatomic, strong) NSMutableArray *viewControllers;
+
 @property (nonatomic, readonly) NSStatusItem *statusItem;
 @property (nonatomic, readonly) NSMenu *mainMenu;
 @property (nonatomic, readonly) NSMenuItem *optionsItem;
@@ -31,9 +37,16 @@
 
 #pragma mark - NSMenuDelegate
 
+- (void)menuWillOpen:(NSMenu *)menu
+{
+    
+}
+
 - (void)menuNeedsUpdate:(NSMenu *)menu
 {
-    [self updateMenu];
+    NSLog(@"%s",__FUNCTION__);
+    
+    [self refreshMenu];
 }
 
 
@@ -55,6 +68,7 @@
         _statusItem.highlightMode = YES;
         _statusItem.image = [NSImage imageNamed:@"light_low"];
         _statusItem.alternateImage = [NSImage imageNamed:@"light_low_white"];
+        
         _statusItem.menu = self.mainMenu;
     }
     return _statusItem;
@@ -67,44 +81,36 @@
         _mainMenu = [[NSMenu alloc] initWithTitle:@"Sunscreen"];
         _mainMenu.delegate = self;
         
-        [_mainMenu addItem:self.optionsItem];
+        if (!_viewControllers) {
+            _viewControllers = [[NSMutableArray alloc] init];
+        }
         
-        NSMenuItem *separator = [NSMenuItem separatorItem];
-        NSMenuItem *quiteItem = [[NSMenuItem alloc] initWithTitle:@"Quit" action:@selector(quit:) keyEquivalent:@"q"];
+        for (SUNScreen *screen in [SUNScreenManager sharedManager].availableScreens) {
+            NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:@"" action:NULL keyEquivalent:@""];
+            
+            SUNViewController *controller = [[SUNViewController alloc] init];
+            controller.screen = screen;
+            item.view = controller.view;
+            
+            NSLog(@"screen : %@", screen.description);
+            
+            [_viewControllers addObject:controller];
+            
+            [_mainMenu addItem:item];
+            
+            NSMenuItem *separator = [NSMenuItem separatorItem];
+            [_mainMenu addItem:separator];
+        }
         
-        [_mainMenu addItem:separator];
-        [_mainMenu addItem:quiteItem];
+        NSString *appName = [NSString stringWithFormat:@"Quit %@", [SUNAppDelegate appName]];
+        NSMenuItem *quitItem = [[NSMenuItem alloc] initWithTitle:appName action:@selector(quit:) keyEquivalent:@"q"];
+        [_mainMenu addItem:quitItem];
     }
     return _mainMenu;
 }
 
-- (NSMenuItem *)optionsItem
-{
-    if (!_optionsItem)
-    {
-        _optionsItem = [[NSMenuItem alloc] initWithTitle:@"" action:NULL keyEquivalent:@""];
-        _optionsItem.view = self.contentView;
-    }
-    return _optionsItem;
-}
-
 
 #pragma mark - IBActions
-
-- (IBAction)sliderChanged:(id)sender
-{
-    float level = self.slider.doubleValue/100;
-    
-    [SunscreenManager sharedManager].brightnessLevel = level;
-}
-
-- (IBAction)adjustAutomatically:(id)sender
-{
-    BOOL on = self.checkbox.state;
-    [self enableSlider:!on];
-    
-    [SunscreenManager sharedManager].autoBrightnessMode = on;
-}
 
 - (IBAction)quit:(id)sender
 {
@@ -114,19 +120,13 @@
 
 #pragma mark - Updates
 
-- (void)updateMenu
+- (void)refreshMenu
 {
-    BOOL autoBrightness = [SunscreenManager sharedManager].autoBrightnessMode;
-    self.checkbox.state = autoBrightness;
+    [_viewControllers removeAllObjects];
+    _viewControllers = nil;
     
-    self.slider.doubleValue = [SunscreenManager sharedManager].brightnessLevel*100;
-    [self enableSlider:!autoBrightness];
-}
-
-- (void)enableSlider:(BOOL)enable
-{
-    [self.slider setEnabled:enable];
-    self.slider.alphaValue = enable ? 1.0 : 0.5;
+    _mainMenu = nil;
+    self.statusItem.menu = self.mainMenu;
 }
 
 

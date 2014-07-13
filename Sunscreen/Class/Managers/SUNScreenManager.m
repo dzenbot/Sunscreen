@@ -1,5 +1,5 @@
 //
-//  SunscreenManager.m
+//  SUNScreenManager.m
 //  Sunscreen
 //
 //  Created by Ignacio Romero Z. on 7/12/14.
@@ -20,11 +20,11 @@ const CFStringRef kDisplayBrightness = CFSTR(kIODisplayBrightnessKey);
 
 static NSString *kAutoBrightnessMode = @"com.dzn.Sunscreen.autoBrightnessMode";
 
-@interface SunscreenManager ()
+@interface SUNScreenManager ()
 @property (nonatomic) BOOL didStartMonitoringLight;
 @end
 
-@implementation SunscreenManager
+@implementation SUNScreenManager
 
 + (void)initialize
 {
@@ -35,7 +35,7 @@ static NSString *kAutoBrightnessMode = @"com.dzn.Sunscreen.autoBrightnessMode";
 
 + (instancetype)sharedManager
 {
-    static SunscreenManager *_sharedManager = nil;
+    static SUNScreenManager *_sharedManager = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _sharedManager = [[self alloc] init];
@@ -49,6 +49,52 @@ static NSString *kAutoBrightnessMode = @"com.dzn.Sunscreen.autoBrightnessMode";
 
 
 #pragma mark - Getters
+
+- (NSArray *)availableScreens
+{
+    NSMutableArray *screens = [NSMutableArray new];
+    
+    CGDirectDisplayID display[kMaxDisplays];
+    CGDisplayCount numDisplays;
+    CGDisplayErr err;
+    err = CGGetActiveDisplayList(kMaxDisplays, display, &numDisplays);
+    
+    if (err != CGDisplayNoErr) {
+        printf("cannot get list of displays (error %d)\n", err);
+    }
+    
+    for (CGDisplayCount i = 0; i < numDisplays; ++i) {
+        
+        CGDirectDisplayID dspy = display[i];
+        CGDisplayModeRef originalMode = CGDisplayCopyDisplayMode(dspy);
+        
+        if (originalMode == NULL) {
+            continue;
+        }
+        
+        SUNScreen *screen = [[SUNScreen alloc] init];
+        screen.name = [NSString stringWithFormat:@"%s", getDisplayName(dspy)];
+        screen.displayID = dspy;
+        
+        [screens addObject:screen];
+    }
+    
+    return screens;
+}
+
+- (NSNumber *)displayCount
+{
+    CGDirectDisplayID display[kMaxDisplays];
+    CGDisplayCount numDisplays;
+    CGDisplayErr err;
+    err = CGGetActiveDisplayList(kMaxDisplays, display, &numDisplays);
+    
+    if (err != CGDisplayNoErr) {
+        printf("cannot get list of displays (error %d)\n", err);
+    }
+    
+    return @(numDisplays);
+}
 
 - (BOOL)autoBrightnessMode
 {
