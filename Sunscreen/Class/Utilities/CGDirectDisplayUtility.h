@@ -58,7 +58,7 @@ static io_service_t IOServicePortFromCGDisplayID(CGDirectDisplayID displayID)
             continue;
         }
         
-        // we're a match
+        // we got a match!
         servicePort = serv;
         CFRelease(info);
         break;
@@ -106,3 +106,62 @@ __unused static const char *getDisplayName(CGDirectDisplayID displayID)
     
     return name;
 }
+
+static CFDictionaryRef IOServiceInfoFromCGDisplayID(CGDirectDisplayID displayID)
+{
+    io_iterator_t iter;
+    io_service_t serv = 0;
+    CFDictionaryRef serviceInfo;
+    
+    CFMutableDictionaryRef matching = IOServiceMatching("IODisplayConnect");
+    
+    // releases matching for us
+    kern_return_t err = IOServiceGetMatchingServices(kIOMasterPortDefault,
+                                                     matching,
+                                                     &iter);
+    if (err) {
+        return 0;
+    }
+    
+    while ((serv = IOIteratorNext(iter)) != 0)
+    {
+        CFDictionaryRef info;
+        CFIndex vendorID, productID;
+        CFNumberRef vendorIDRef, productIDRef;
+        Boolean success;
+        
+        info = IODisplayCreateInfoDictionary(serv,
+                                             kIODisplayOnlyPreferredName);
+        
+        vendorIDRef = CFDictionaryGetValue(info,
+                                           CFSTR(kDisplayVendorID));
+        productIDRef = CFDictionaryGetValue(info,
+                                            CFSTR(kDisplayProductID));
+        
+        success = CFNumberGetValue(vendorIDRef, kCFNumberCFIndexType,
+                                   &vendorID);
+        success &= CFNumberGetValue(productIDRef, kCFNumberCFIndexType,
+                                    &productID);
+        
+        if (!success)
+        {
+            CFRelease(info);
+            continue;
+        }
+        
+        if (CGDisplayVendorNumber(displayID) != vendorID ||
+            CGDisplayModelNumber(displayID) != productID)
+        {
+            CFRelease(info);
+            continue;
+        }
+        
+        // we got a match!
+        serviceInfo = info;
+        break;
+    }
+    
+    IOObjectRelease(iter);
+    return serviceInfo;
+}
+

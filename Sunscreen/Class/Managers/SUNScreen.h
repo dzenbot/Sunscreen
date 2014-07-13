@@ -12,9 +12,9 @@
 
 @property (nonatomic, readwrite) CGDirectDisplayID displayID;
 @property (nonatomic, readwrite) NSString *name;
+@property (nonatomic, readwrite) NSString *iconPath;
+
 @property (nonatomic, readwrite) float brightnessLevel;
 @property (nonatomic, readwrite) BOOL adjustsBrightnessAutomatically;
-
-
 
 @end

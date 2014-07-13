@@ -9,14 +9,23 @@
 #import <Foundation/Foundation.h>
 #import "SUNScreen.h"
 
+static NSString *kAdjustGlobalBrightnessNotification = @"com.dzn.Sunscreen.updateGlobalBrightness";
+
+typedef NS_ENUM(NSUInteger, SUNScreenBrightnessMode) {
+    SUNScreenBrightnessModeDedicated,
+    SUNScreenBrightnessModeGlobal
+};
+
 @interface SUNScreenManager : NSObject
 
-@property (nonatomic, readwrite) float brightnessLevel;
-@property (nonatomic, readwrite) BOOL autoBrightnessMode;
-
-@property (nonatomic, readonly) NSNumber *displayCount;
 @property (nonatomic, readonly) NSArray *availableScreens;
 
+@property (nonatomic, readwrite) SUNScreenBrightnessMode brightnessMode;
+
 + (instancetype)sharedManager;
+
+- (float)brightnessLevelFromScreen:(SUNScreen *)screen;
+- (void)setBrightnessLevel:(float)level toScreen:(SUNScreen *)screen;
+- (void)setGlobalBrightnessLevel:(float)level;
 
 @end

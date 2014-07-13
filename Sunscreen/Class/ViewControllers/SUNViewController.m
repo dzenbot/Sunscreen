@@ -9,12 +9,11 @@
 #import "SUNViewController.h"
 #import "SUNScreenManager.h"
 
-#import "SUNSlider.h"
-
 @interface SUNViewController ()
 @end
 
 @implementation SUNViewController
+
 
 #pragma mark - initializers
 
@@ -25,12 +24,21 @@
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    
     self = [super initWithNibName:@"SUNViewController" bundle:[NSBundle mainBundle]];
     if (self) {
-        // Initialization code here.
+        
     }
     return self;
+}
+
+
+#pragma mark - View Lifecycle
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    [self refreshSubviews];
 }
 
 #pragma mark - Setters
@@ -38,14 +46,9 @@
 - (void)setScreen:(SUNScreen *)screen
 {
     _screen = screen;
-
-    [self.titleLabel setStringValue:screen.name];
     
-    NSLog(@"self.titleLabel : %@", self.titleLabel);
-    
-    for (NSView *subview in self.view.subviews) {
-        NSLog(@"subview : %@", subview);
-    }
+    [self.view.iconView setImage:[[NSImage alloc] initWithContentsOfFile:screen.iconPath]];
+    [self.view.titleLabel setStringValue:screen.name];
 }
 
 
@@ -53,38 +56,40 @@
 
 - (IBAction)sliderDidChange:(id)sender
 {
-    NSLog(@"%s",__FUNCTION__);
+    float level = self.view.slider.doubleValue/100;
+
+    SUNScreenBrightnessMode mode = [SUNScreenManager sharedManager].brightnessMode;
+    
+    if (mode == SUNScreenBrightnessModeDedicated) {
+        [[SUNScreenManager sharedManager] setBrightnessLevel:level toScreen:self.screen];
+    }
+    else {
+        [[SUNScreenManager sharedManager] setGlobalBrightnessLevel:level];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kAdjustGlobalBrightnessNotification object:@(level)];
+    }
 }
 
-- (IBAction)didMoveSlider:(id)sender
-{
-    NSLog(@"%s",__FUNCTION__);
-    
-//    float level = self.slider.doubleValue/100;
+//- (IBAction)checkBoxDidChange:(id)sender
+//{
+//    NSLog(@"%s",__FUNCTION__);
 //    
-//    [SUNScreenManager sharedManager].brightnessLevel = level;
-}
-
-- (IBAction)didCheckBox:(id)sender
-{
-    NSLog(@"%s",__FUNCTION__);
-    
-//    BOOL on = self.checkbox.state;
-//    self.slider.enabled = !on;
+//    BOOL on = self.view.checkbox.state;
+//    self.view.slider.enabled = !on;
 //    
 //    [SUNScreenManager sharedManager].autoBrightnessMode = on;
-}
+//}
 
 
 #pragma mark - Updates
 
-- (void)refresh
+- (void)refreshSubviews
 {
-    BOOL autoBrightness = [SUNScreenManager sharedManager].autoBrightnessMode;
-    self.checkbox.state = autoBrightness;
+    float level = [[SUNScreenManager sharedManager] brightnessLevelFromScreen:self.screen];
+    self.view.slider.doubleValue = level*100;
     
-    self.slider.doubleValue = [SUNScreenManager sharedManager].brightnessLevel*100;
-    self.slider.enabled = !autoBrightness;
+//    BOOL autoBrightness = [SUNScreenManager sharedManager].autoBrightnessMode;
+//    self.view.checkbox.state = autoBrightness;
+//    self.view.slider.enabled = !autoBrightness;
 }
 
 @end

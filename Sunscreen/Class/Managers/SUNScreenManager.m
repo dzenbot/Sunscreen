@@ -12,16 +12,17 @@
 #include <stdlib.h>
 #include <limits.h>
 
-#include <IOKit/graphics/IOGraphicsLib.h>
-#include <IOKit/graphics/IOGraphicsLib.h>
+#import <IOKit/graphics/IOGraphicsLib.h>
+#import <IOKit/IOBSD.h>
 
 const int kMaxDisplays = 16;
 const CFStringRef kDisplayBrightness = CFSTR(kIODisplayBrightnessKey);
 
-static NSString *kAutoBrightnessMode = @"com.dzn.Sunscreen.autoBrightnessMode";
+static NSString *kBrightnessMode = @"com.dzn.Sunscreen.brightnessMode";
 
 @interface SUNScreenManager ()
 @property (nonatomic) BOOL didStartMonitoringLight;
+@property (nonatomic, strong) NSMutableArray *cachedScreens;
 @end
 
 @implementation SUNScreenManager
@@ -39,10 +40,7 @@ static NSString *kAutoBrightnessMode = @"com.dzn.Sunscreen.autoBrightnessMode";
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _sharedManager = [[self alloc] init];
-        
-        if ([_sharedManager autoBrightnessMode]) {
-            [_sharedManager getAmbientLight];
-        }
+        _sharedManager.cachedScreens = [NSMutableArray new];
     });
     return _sharedManager;
 }
@@ -50,154 +48,146 @@ static NSString *kAutoBrightnessMode = @"com.dzn.Sunscreen.autoBrightnessMode";
 
 #pragma mark - Getters
 
+- (SUNScreen *)screenForDisplayID:(CGDirectDisplayID)dspy
+{
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"displayID == %@", @(dspy)];
+    NSArray *screens = [[NSArray arrayWithArray:_cachedScreens] filteredArrayUsingPredicate:predicate];
+    
+    if ([screens firstObject]) {
+        return [screens firstObject];
+    }
+    
+    NSDictionary *screenInfo = (__bridge NSDictionary *)IOServiceInfoFromCGDisplayID(dspy);
+    
+    SUNScreen *screen = [SUNScreen new];
+    screen.displayID = dspy;
+    screen.name = [[screenInfo objectForKey:@"DisplayProductName"] objectForKey:@"en_US"];
+    screen.iconPath = [screenInfo objectForKey:@"display-icon"];
+    
+    return screen;
+}
+
 - (NSArray *)availableScreens
 {
-    NSMutableArray *screens = [NSMutableArray new];
-    
     CGDirectDisplayID display[kMaxDisplays];
     CGDisplayCount numDisplays;
-    CGDisplayErr err;
-    err = CGGetActiveDisplayList(kMaxDisplays, display, &numDisplays);
+    CGDisplayErr err = CGGetActiveDisplayList(kMaxDisplays, display, &numDisplays);
     
     if (err != CGDisplayNoErr) {
         printf("cannot get list of displays (error %d)\n", err);
+        return nil;
     }
+    
+    NSMutableArray *screens = [[NSMutableArray alloc] initWithCapacity:numDisplays];
     
     for (CGDisplayCount i = 0; i < numDisplays; ++i) {
         
         CGDirectDisplayID dspy = display[i];
-        CGDisplayModeRef originalMode = CGDisplayCopyDisplayMode(dspy);
-        
-        if (originalMode == NULL) {
-            continue;
-        }
-        
-        SUNScreen *screen = [[SUNScreen alloc] init];
-        screen.name = [NSString stringWithFormat:@"%s", getDisplayName(dspy)];
-        screen.displayID = dspy;
-        
+        SUNScreen *screen = [self screenForDisplayID:dspy];
+
         [screens addObject:screen];
+        [_cachedScreens addObject:screen];
     }
     
     return screens;
 }
 
-- (NSNumber *)displayCount
+- (SUNScreenBrightnessMode)brightnessMode
 {
-    CGDirectDisplayID display[kMaxDisplays];
-    CGDisplayCount numDisplays;
-    CGDisplayErr err;
-    err = CGGetActiveDisplayList(kMaxDisplays, display, &numDisplays);
-    
-    if (err != CGDisplayNoErr) {
-        printf("cannot get list of displays (error %d)\n", err);
-    }
-    
-    return @(numDisplays);
+    return [[NSUserDefaults standardUserDefaults] integerForKey:kBrightnessMode];
 }
 
-- (BOOL)autoBrightnessMode
-{
-    return [[NSUserDefaults standardUserDefaults] boolForKey:kAutoBrightnessMode];
-}
-
-- (float)brightnessLevel
+- (float)brightnessLevelFromScreen:(SUNScreen *)screen
 {
 	CGDirectDisplayID display[kMaxDisplays];
 	CGDisplayCount numDisplays;
-	CGDisplayErr err;
-	err = CGGetActiveDisplayList(kMaxDisplays, display, &numDisplays);
+	CGDisplayErr err = CGGetActiveDisplayList(kMaxDisplays, display, &numDisplays);
 	
 	if (err != CGDisplayNoErr) {
 		printf("cannot get list of displays (error %d)\n", err);
     }
     
-	for (CGDisplayCount i = 0; i < numDisplays; ++i) {
-        
-        CGDirectDisplayID dspy = display[i];
-		CGDisplayModeRef originalMode = CGDisplayCopyDisplayMode(dspy);
-        
-		if (originalMode == NULL) {
-			continue;
-        }
-        
-        io_service_t serv = IOServicePortFromCGDisplayID(dspy);
-        if (!serv) {
-            break;
-        }
-        
-		float brightness;
-		err = IODisplayGetFloatParameter(serv, kNilOptions, kDisplayBrightness, &brightness);
-        
-		if (err != kIOReturnSuccess) {
-			fprintf(stderr,
-					"failed to get brightness of display 0x%x (error %d)",
-					(unsigned int)dspy, err);
-			continue;
-		}
-        
-        IOObjectRelease(serv);
-
-		return brightness;
-	}
-	return 1.0; //couldn't get brightness for any display
+    io_service_t serv = IOServicePortFromCGDisplayID(screen.displayID);
+    if (!serv) {
+        return 1.0;
+    }
+    
+    float brightness;
+    err = IODisplayGetFloatParameter(serv, kNilOptions, kDisplayBrightness, &brightness);
+    
+    if (err != kIOReturnSuccess) {
+        fprintf(stderr,
+                "failed to get brightness of display 0x%x (error %d)",
+                (unsigned int)screen.displayID, err);
+        return 1.0;
+    }
+    
+    IOObjectRelease(serv);
+    
+    return brightness;
 }
 
 
 #pragma mark - Setters
 
-- (void)setAutoBrightnessMode:(BOOL)on
+- (void)setBrightnessMode:(SUNScreenBrightnessMode)mode
 {
-    if (on) {
-        [self getAmbientLight];
-    }
-    
-    [[NSUserDefaults standardUserDefaults] setBool:on forKey:kAutoBrightnessMode];
+    [[NSUserDefaults standardUserDefaults] setInteger:mode forKey:kBrightnessMode];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-- (void)setBrightnessLevel:(float)level
+- (void)setGlobalBrightnessLevel:(float)level
+{
+    [self setBrightnessLevel:level toScreen:nil];
+}
+
+- (void)setBrightnessLevel:(float)level toScreen:(SUNScreen *)screen
 {
     CGDirectDisplayID display[kMaxDisplays];
-	CGDisplayCount numDisplays;
-	CGDisplayErr err;
-	err = CGGetActiveDisplayList(kMaxDisplays, display, &numDisplays);
+    CGDisplayCount numDisplays;
+    CGDisplayErr err = CGGetActiveDisplayList(kMaxDisplays, display, &numDisplays);
     
     if (err != CGDisplayNoErr) {
-		printf("cannot get list of displays (error %d)\n", err);
+        printf("cannot get list of displays (error %d)\n", err);
     }
     
-    io_iterator_t iterator;
-    kern_return_t result = IOServiceGetMatchingServices(kIOMasterPortDefault, IOServiceMatching("IODisplayConnect"), &iterator);
+    io_service_t service;
+    if (!service) {
+        return;
+    }
     
-    // If we were successful
-    if (result == kIOReturnSuccess)
-    {
-        for (CGDisplayCount i = 0; i < numDisplays; ++i) {
+    io_iterator_t iterator = 0;
+    kern_return_t result = IOServiceGetMatchingServices(kIOMasterPortDefault, IOServiceMatching("IODisplayConnect"), &iterator);
+
+    // If not successful
+    if (result != kIOReturnSuccess) {
+        printf("IOServiceGetMatchingServices failed: %d\n", result);
+        return;
+    }
+    
+    NSInteger i = 0;
+    
+    while ((service = IOIteratorNext(iterator))) {
+        
+        if (screen) {
+            SUNScreen *_cachedScreen = [self availableScreens][i];
             
-            CGDirectDisplayID dspy = display[i];
-            CGDisplayModeRef originalMode = CGDisplayCopyDisplayMode(dspy);
-            
-//            NSString *displayName = [NSString stringWithFormat:@"%s", getDisplayName(dspy)];
-//            NSLog(@"modifying : %@", displayName);
-            
-            if (originalMode == NULL) {
-                continue;
-            }
-            
-            io_service_t service = IOServicePortFromCGDisplayID(dspy);
-            if (!service) {
-                continue;
-            }
-            
-            while ((service = IOIteratorNext(iterator))) {
+            if (_cachedScreen.displayID == screen.displayID) {
                 IODisplaySetFloatParameter(service, kNilOptions, CFSTR(kIODisplayBrightnessKey), level);
-                
-                // Let the object go
-                IOObjectRelease(service);
             }
         }
+        else {
+            IODisplaySetFloatParameter(service, kNilOptions, CFSTR(kIODisplayBrightnessKey), level);
+        }
+        
+        // Let the object go
+        IOObjectRelease(service);
+        
+        // We iterate throught all the available displays
+        i++;
     }
+    
+    IOObjectRelease(iterator);
 }
 
 
