@@ -8,7 +8,11 @@
 
 #import <Cocoa/Cocoa.h>
 
+CFAbsoluteTime startTime;
+
 int main(int argc, const char * argv[])
 {
+    startTime = CFAbsoluteTimeGetCurrent();
+    
     return NSApplicationMain(argc, argv);
 }

@@ -8,6 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+extern CFAbsoluteTime startTime;
+
 @interface SUNAppDelegate : NSObject <NSApplicationDelegate, NSMenuDelegate>
 
 - (IBAction)quit:(id)sender;

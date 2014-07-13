@@ -33,6 +33,12 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustGlobalBrightness:) name:kAdjustGlobalBrightnessNotification object:nil];
+    
+    // Traces how much time the app takes to load.
+    // Apple suggests that the loading time should not exceed 1.2 seconds (opening animation takes 500 ms)
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"Application did finish launching in %f seconds", CFAbsoluteTimeGetCurrent() - startTime);
+    });
 }
 
 
