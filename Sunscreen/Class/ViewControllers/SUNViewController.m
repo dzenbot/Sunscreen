@@ -8,6 +8,10 @@
 
 #import "SUNViewController.h"
 #import "SUNScreenManager.h"
+#import "SUNEventManager.h"
+
+#define kCellMaxCount 16
+#define kCellValue roundf(self.view.slider.maxValue/kCellMaxCount)
 
 @interface SUNViewController ()
 @end
@@ -27,8 +31,33 @@
     self = [super initWithNibName:@"SUNViewController" bundle:[NSBundle mainBundle]];
     if (self) {
         
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(forceIncrease:) name:kDecreaseBrightnessNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(forceDecrease:) name:kDecreaseBrightnessNotification object:nil];
+
     }
     return self;
+}
+
+- (void)forceIncrease:(id)sender
+{
+    if (self.view.slider.doubleValue < self.view.slider.maxValue) {
+        double value = self.view.slider.doubleValue+kCellValue;
+        NSLog(@"value : %@", @(value));
+        
+        [self.view.slider setDoubleValue:value];
+        [[SUNScreenManager sharedManager] setBrightnessLevel:value/100 toScreen:self.screen];
+    }
+}
+
+- (void)forceDecrease:(id)sender
+{
+    if (self.view.slider.doubleValue > self.view.slider.minValue) {
+        double value = self.view.slider.doubleValue-kCellValue;
+        NSLog(@"value : %@", @(value));
+
+        [self.view.slider setDoubleValue:value];
+        [[SUNScreenManager sharedManager] setBrightnessLevel:value/100 toScreen:self.screen];
+    }
 }
 
 
@@ -69,16 +98,6 @@
     }
 }
 
-//- (IBAction)checkBoxDidChange:(id)sender
-//{
-//    NSLog(@"%s",__FUNCTION__);
-//    
-//    BOOL on = self.view.checkbox.state;
-//    self.view.slider.enabled = !on;
-//    
-//    [SUNScreenManager sharedManager].autoBrightnessMode = on;
-//}
-
 
 #pragma mark - Updates
 
@@ -86,10 +105,6 @@
 {
     float level = [[SUNScreenManager sharedManager] brightnessLevelFromScreen:self.screen];
     self.view.slider.doubleValue = level*100;
-    
-//    BOOL autoBrightness = [SUNScreenManager sharedManager].autoBrightnessMode;
-//    self.view.checkbox.state = autoBrightness;
-//    self.view.slider.enabled = !autoBrightness;
 }
 
 @end

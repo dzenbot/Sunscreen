@@ -27,12 +27,7 @@ static NSString *kBrightnessMode = @"com.dzn.Sunscreen.brightnessMode";
 
 @implementation SUNScreenManager
 
-+ (void)initialize
-{
-    [super initialize];
-    
-
-}
+#pragma mark - initializers
 
 + (instancetype)sharedManager
 {
@@ -50,7 +45,7 @@ static NSString *kBrightnessMode = @"com.dzn.Sunscreen.brightnessMode";
 
 - (SUNScreen *)screenForDisplayID:(CGDirectDisplayID)dspy
 {
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"displayID == %@", @(dspy)];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"identifier == %@", @(dspy)];
     NSArray *screens = [[NSArray arrayWithArray:_cachedScreens] filteredArrayUsingPredicate:predicate];
     
     if ([screens firstObject]) {
@@ -60,7 +55,7 @@ static NSString *kBrightnessMode = @"com.dzn.Sunscreen.brightnessMode";
     NSDictionary *screenInfo = (__bridge NSDictionary *)IOServiceInfoFromCGDisplayID(dspy);
     
     SUNScreen *screen = [SUNScreen new];
-    screen.displayID = dspy;
+    screen.identifier = dspy;
     screen.name = [[screenInfo objectForKey:@"DisplayProductName"] objectForKey:@"en_US"];
     screen.iconPath = [screenInfo objectForKey:@"display-icon"];
     
@@ -107,7 +102,7 @@ static NSString *kBrightnessMode = @"com.dzn.Sunscreen.brightnessMode";
 		printf("cannot get list of displays (error %d)\n", err);
     }
     
-    io_service_t serv = IOServicePortFromCGDisplayID(screen.displayID);
+    io_service_t serv = IOServicePortFromCGDisplayID(screen.identifier);
     if (!serv) {
         return 1.0;
     }
@@ -118,7 +113,7 @@ static NSString *kBrightnessMode = @"com.dzn.Sunscreen.brightnessMode";
     if (err != kIOReturnSuccess) {
         fprintf(stderr,
                 "failed to get brightness of display 0x%x (error %d)",
-                (unsigned int)screen.displayID, err);
+                (unsigned int)screen.identifier, err);
         return 1.0;
     }
     
@@ -172,7 +167,7 @@ static NSString *kBrightnessMode = @"com.dzn.Sunscreen.brightnessMode";
         if (screen) {
             SUNScreen *_cachedScreen = [self availableScreens][i];
             
-            if (_cachedScreen.displayID == screen.displayID) {
+            if (_cachedScreen.identifier == screen.identifier) {
                 IODisplaySetFloatParameter(service, kNilOptions, CFSTR(kIODisplayBrightnessKey), level);
             }
         }

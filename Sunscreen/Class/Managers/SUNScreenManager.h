@@ -19,7 +19,6 @@ typedef NS_ENUM(NSUInteger, SUNScreenBrightnessMode) {
 @interface SUNScreenManager : NSObject
 
 @property (nonatomic, readonly) NSArray *availableScreens;
-
 @property (nonatomic, readwrite) SUNScreenBrightnessMode brightnessMode;
 
 + (instancetype)sharedManager;

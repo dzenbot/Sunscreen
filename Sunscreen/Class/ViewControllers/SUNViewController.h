@@ -14,11 +14,9 @@
 @interface SUNViewController : NSViewController
 
 @property (nonatomic, strong) SUNScreen *screen;
-
 @property (strong) SUNView *view;
 
 - (IBAction)sliderDidChange:(id)sender;
-//- (IBAction)checkBoxDidChange:(id)sender;
 
 - (void)refreshSubviews;
 

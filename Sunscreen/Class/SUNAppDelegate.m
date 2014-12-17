@@ -8,10 +8,14 @@
 
 #import "SUNAppDelegate.h"
 #import "SUNViewController.h"
+#import "SUNMenu.h"
 
 #import "SUNScreenManager.h"
+#import "SUNEventManager.h"
 
 #import "NSObject+System.h"
+
+#define kAdditionalMenuItemsBelow 6
 
 @interface SUNAppDelegate ()
 @property (nonatomic, strong) NSMutableArray *viewControllers;
@@ -34,8 +38,12 @@
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustGlobalBrightness:) name:kAdjustGlobalBrightnessNotification object:nil];
     
+    [[SUNEventManager sharedManager] startMonitoring];
+    
+    // Hides icon on Dock
+    [NSApp setActivationPolicy: NSApplicationActivationPolicyProhibited];
+    
     // Traces how much time the app takes to load.
-    // Apple suggests that the loading time should not exceed 1.2 seconds (opening animation takes 500 ms)
     dispatch_async(dispatch_get_main_queue(), ^{
         NSLog(@"Application did finish launching in %f seconds", CFAbsoluteTimeGetCurrent() - startTime);
     });
@@ -127,6 +135,7 @@
         [checkbox setButtonType:NSSwitchButton];
         [checkbox setTitle:@"Global Brightness Adjustment"];
         [checkbox setTarget:self];
+        [checkbox setState:[[SUNScreenManager sharedManager] brightnessMode]];
         [checkbox setAction:@selector(allowGlobalBrightness:)];
         
         [_adjustmentView addSubview:checkbox];
@@ -161,6 +170,17 @@
 }
 
 
+#pragma mark - Notifications
+
+- (void)adjustGlobalBrightness:(NSNotification *)notification
+{
+    for (SUNViewController *controller in self.viewControllers) {
+        double level = [notification.object doubleValue]*100;
+        [controller.view.slider setDoubleValue:level];
+    }
+}
+
+
 #pragma mark - Updates
 
 - (NSArray *)presentedScreens
@@ -176,8 +196,6 @@
 
 - (void)refreshMenu
 {
-    NSLog(@"%s",__FUNCTION__);
-    
     NSArray *screens = [SUNScreenManager sharedManager].availableScreens;
 
     // Should insert new items
@@ -189,7 +207,7 @@
         [set minusSet:[NSSet setWithArray:[self presentedScreens]]];
         
         for (SUNScreen *screen in [set allObjects]) {
-            NSInteger idx = _mainMenu.itemArray.count-4;
+            NSInteger idx = _mainMenu.itemArray.count-kAdditionalMenuItemsBelow;
             [self insertScreen:screen atMenuIndex:idx];
         }
     }
@@ -218,8 +236,6 @@
 
 - (void)insertScreen:(SUNScreen *)screen atMenuIndex:(NSInteger)idx
 {
-    NSLog(@"%s : %ld",__FUNCTION__, (long)idx);
-    
     if (idx < 0 || !screen) {
         return;
     }
@@ -242,7 +258,7 @@
     NSInteger arrayIdx = -1;
     
     for (SUNViewController *controller in _viewControllers) {
-        if (controller.screen.displayID != screen.displayID) {
+        if (controller.screen.identifier != screen.identifier) {
             arrayIdx = [_viewControllers indexOfObject:controller];
         }
     }
@@ -256,14 +272,6 @@
     
     [_viewControllers removeObjectAtIndex:arrayIdx];
     [_items removeObjectAtIndex:arrayIdx];
-}
-
-- (IBAction)adjustGlobalBrightness:(NSNotification *)notification
-{
-    for (SUNViewController *controller in self.viewControllers) {
-        double level = [notification.object doubleValue]*100;
-        [controller.view.slider setDoubleValue:level];
-    }
 }
 
 - (void)resetMenu

@@ -10,7 +10,7 @@
 
 @interface SUNScreen : NSObject
 
-@property (nonatomic, readwrite) CGDirectDisplayID displayID;
+@property (nonatomic, readwrite) CGDirectDisplayID identifier;
 @property (nonatomic, readwrite) NSString *name;
 @property (nonatomic, readwrite) NSString *iconPath;
 
